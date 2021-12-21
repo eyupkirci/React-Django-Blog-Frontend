@@ -5,10 +5,11 @@ export const loginAction = (data) => {
         type: LOGIN_IS_SUCCESS,
         payload: data
     }
-}
+};
+
 export const logoutAction = () => {
     return{
         type: LOGOUT_IS_SUCCESS,
         payload: ''
     }
-}
+};

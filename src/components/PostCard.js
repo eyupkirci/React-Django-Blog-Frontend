@@ -28,11 +28,11 @@ export default function PostCard({ post }) {
                 </Typography>
             </CardContent>
             <CardActions sx={{ display: 'flex'}}>
-                <Box>
+                <Box alignSelf='flex-end'>
 
                 <Button size="small">View</Button>
                 <Button size="small">Like</Button>
-                <Button size="small">Comment</Button>
+                <Button size="small" >Comment</Button>
                 </Box>
             </CardActions>
         </Card>
