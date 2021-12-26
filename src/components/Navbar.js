@@ -1,40 +1,66 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
+import React, { useState } from 'react'
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
 
-import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import FingerprintIcon from "@mui/icons-material/Fingerprint";
 
-const pages = ['Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+import { Link, useNavigate} from "react-router-dom";
+
+
+import axios from 'axios';
+import { useSelector } from "react-redux";
+
+import { useDispatch } from "react-redux";
+import { loginAction } from "../redux/actions/LoginActions";
+
+const pages = ["Blog"];
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const isLogin = useSelector((state) => state.loginReducer);
+  const dispatch = useDispatch();
+  const history = useNavigate();
+  
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-
+  
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
+  
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  
+  
+  async function handleLogout(){
+        try {
+      await axios.post("http://127.0.0.1:8000/accounts/auth/logout/")
+      .then((response) => {
+        console.log(response);
+        history('/')
+        dispatch(loginAction(''));
+      })}
+      catch (e) {
+        alert(e.message);
+      };
+  }
+
 
   return (
     <AppBar position="static">
@@ -44,12 +70,12 @@ const ResponsiveAppBar = () => {
             variant="h6"
             noWrap
             component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+            sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
           >
-            <FingerprintIcon/>
+            <FingerprintIcon />
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -64,18 +90,18 @@ const ResponsiveAppBar = () => {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: "bottom",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: "block", md: "none" },
               }}
             >
               {pages.map((page) => (
@@ -89,19 +115,18 @@ const ResponsiveAppBar = () => {
             variant="h6"
             noWrap
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
             Fullstack Blog
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-
-              {/* pages map */}
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {/* pages map */}
 
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
               </Button>
@@ -115,28 +140,71 @@ const ResponsiveAppBar = () => {
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+              {/* dropdown menu */}
 
-                {/* dropdown menu map */}
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem>
+                <Link
+                  to=""
+                  style={{ textDecoration: "none", textAlign: "center" }}
+                >
+                  Dashboard
+                </Link>
+              </MenuItem>
+              {isLogin ? (
+                <Box>
+                  <MenuItem>
+                    <Link
+                      to="profile"
+                      style={{ textDecoration: "none", textAlign: "center" }}
+                    >
+                      Profile
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link
+                      to="logout"
+                      style={{ textDecoration: "none", textAlign: "center" }}
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </Link>
+                  </MenuItem>
+                </Box>
+              ) : (
+                <Box>
+                  <MenuItem>
+                    <Link
+                      to="login/"
+                      style={{ textDecoration: "none", textAlign: "center" }}
+                    >
+                      Login
+                    </Link>
+                  </MenuItem>
+                  <MenuItem>
+                    <Link
+                      to="register/"
+                      style={{ textDecoration: "none", textAlign: "center" }}
+                    >
+                      Register
+                    </Link>
+                  </MenuItem>
+                </Box>
+              )}
             </Menu>
           </Box>
         </Toolbar>

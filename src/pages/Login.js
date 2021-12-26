@@ -42,11 +42,10 @@ export default function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const values = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      username: values.get("username"),
-      password: values.get("password"),
-    });
+    // console.log({
+    //   username: values.get("username"),
+    //   password: values.get("password"),
+    // });
 
     axios
       .post("http://127.0.0.1:8000/accounts/auth/login/", values)
