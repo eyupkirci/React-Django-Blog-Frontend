@@ -1,5 +1,6 @@
-const InitialState ={
-    login:''
+const initialState ={
+    login:'',
+    
 }
 
-export default InitialState
+export default initialState
